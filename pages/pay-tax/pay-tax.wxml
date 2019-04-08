@@ -1,0 +1,205 @@
+<!--pages/pay-tax.wxml-->
+<view class="page">
+  <view class="modal-mask" catchtouchmove="preventTouchMove" wx:if="{{houseRentModal || childrenEducationModal || medicalModal || selfEducationModal || oldModal}}"></view>
+  <view class="page__hd">
+    <view class="page__title">新税法工资计算器</view>
+    <view class="page__desc">2019年新税法</view>
+  </view>
+  <view class="page__bd">
+    <!-- 月工资输入 -->
+    <view class="weui-cells__title">月工资</view>
+    <view class="weui-cells weui-cells_after-title weui-flex">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">月收入</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" type="digit" placeholder="请输入月薪(元)" bindinput="inputPay" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 公积金扣除 -->
+    <view class="weui-cells__title">公积金</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">公积金缴纳基数</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" type="digit" placeholder="公积金缴纳基数" bindinput="inputHouseFundNumber" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">公积金缴纳比例</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" type="digit" placeholder="%" bindinput="inputHouseFundProportion" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 社保扣除 -->
+    <view class="weui-cells__title">社保</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">社保缴纳基数</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" type="digit" placeholder="社保缴纳基数" bindinput="inputInsuranceNumber" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">养老保险比例</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" type="digit" placeholder="%" bindinput="inputPensionProportion" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">失业保险比例</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" type="digit" placeholder="%" bindinput="inputUnemployedProportion" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">医疗保险比例</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" type="digit" placeholder="%" bindinput="inputMedicalProportion" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 专项扣除 -->
+    <view class="weui-cells__title">专项扣除</view>
+    <view class="weui-grids weui-cells_after-title">
+      <block>
+        <view class="weui-grid {{houseLoadSelected ? 'active_grid':''}}" hover-class="weui-grid_active" bindtap="houseLoadClick">
+          <image class="weui-grid__icon" src="images/house.png" />
+          <view class="weui-grid__label">首套房贷</view>
+          <view class="weui-grid__label">{{houseLoadDeduction}}元/月</view>
+        </view>
+      </block>
+
+      <block>
+        <view class="weui-grid {{houseRentSelected ? 'active_grid':''}}" hover-class="weui-grid_active" bindtap="houseRentClick">
+          <image class="weui-grid__icon" src="images/rent.png" />
+          <view class="weui-grid__label">房租支出</view>
+          <view class="weui-grid__label">{{houseRentDeduction}}元/月</view>
+        </view>
+      </block>
+
+      <block>
+        <view class="weui-grid {{childrenEducationSelected ? 'active_grid':''}}" hover-class="weui-grid_active" bindtap="childrenEducationClick">
+          <image class="weui-grid__icon" src="images/children.png" />
+          <view class="weui-grid__label">子女教育</view>
+          <view class="weui-grid__label">{{childrenEducationDeduction}}元/月</view>
+        </view>
+      </block>
+
+      <block>
+        <view class="weui-grid {{medicalSelected ? 'active_grid':''}}" hover-class="weui-grid_active" bindtap="medicalClick">
+          <image class="weui-grid__icon" src="images/doctor.png" />
+          <view class="weui-grid__label">大病医疗</view>
+          <view class="weui-grid__label">{{medicalDeduction}}元/月</view>
+        </view>
+      </block>
+
+      <block>
+        <view class="weui-grid {{selfEducationSelected ? 'active_grid':''}}" hover-class="weui-grid_active" bindtap="selfEducationClick">
+          <image class="weui-grid__icon" src="images/education.png" />
+          <view class="weui-grid__label">继续教育</view>
+          <view class="weui-grid__label">{{selfEducationDeduction}}元/月</view>
+        </view>
+      </block>
+
+      <block>
+        <view class="weui-grid {{oldSelected ? 'active_grid':''}}" hover-class="weui-grid_active" bindtap="oldClick">
+          <image class="weui-grid__icon" src="images/old_couple.png" />
+          <view class="weui-grid__label">赡养老人</view>
+          <view class="weui-grid__label">{{oldDeduction}}元/月</view>
+        </view>
+      </block>
+    </view>
+
+    <view class="modal-dialog" wx:if="{{houseRentModal}}">
+      <view class="modal-title">所在城市规模</view>
+      <view class="modal-content">
+        <view class="modal-input">
+          <radio-group bindchange="houseRentChange">
+            <label class="weui-cell weui-check__label" wx:for="{{houseRentRadios}}" wx:key="value">
+              <radio class="weui-check" value="{{item.idx}}" checked="{{item.checked}}" />
+              <view class="weui-cell__bd" class="{{item.checked ? 'active_grid':''}}">{{item.name}}</view>
+              <view class="weui-cell__ft weui-cell__ft_in-radio" wx:if="{{item.checked}}">
+                <icon class="weui-icon-radio" type="success_no_circle" size="5"></icon>
+              </view>
+            </label>
+          </radio-group>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <view class="btn-confirm" bindtap="houseRentConfirm">确定</view>
+      </view>
+    </view>
+
+    <view class="modal-dialog" wx:if="{{childrenEducationModal}}">
+      <view class="modal-title">子女数量</view>
+      <view class="modal-content">
+        <view class="modal-input">
+          <view class="modal-input">
+            <input placeholder-class="input-holder" type="number" maxlength="10" bindinput="childrenNumberChange" class="input" placeholder="请输入子女数量"></input>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <view class="btn-confirm" bindtap="childrenEducationConfirm">确定</view>
+      </view>
+    </view>
+
+    <!-- 专项扣除 -->
+    <view class="weui-cells__title">税后月收入</view>
+    <view class="weui-grids weui-cells_after-title">
+      <view class="table">
+        <view class="tr bg-w">
+          <view class="th">月份</view>
+          <view class="th">税前工资（元）</view>
+          <view class="th ">五险一金（元）</view>
+          <view class="th ">个人所得税（元）</view>
+          <view class="th ">税后工资（元）</view>
+        </view>
+        <block wx:for="{{monthlyPays}}" wx:key="{{code}}">
+          <view class="tr bg-g" wx:if="{{index % 2 == 0}}">
+            <view class="td">{{item.month}}</view>
+            <view class="td">{{item.beforePay}}</view>
+            <view class="td">{{item.fund}}</view>
+            <view class="td">{{item.tax}}</view>
+            <view class="td">{{item.afterPay}}</view>
+          </view>
+          <view class="tr" wx:else>
+            <view class="td">{{item.month}}</view>
+            <view class="td">{{item.beforePay}}</view>
+            <view class="td">{{item.fund}}</view>
+            <view class="td">{{item.tax}}</view>
+            <view class="td">{{item.afterPay}}</view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+  </view>
+  <view class="page__ft">
+    <view class="weui-footer">
+      <view class="weui-footer__links">
+        <navigator url="" class="weui-footer__link">weixliu</navigator>
+      </view>
+      <view class="weui-footer__text">Copyright © weixliu</view>
+    </view>
+  </view>
+</view>
