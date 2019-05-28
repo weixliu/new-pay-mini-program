@@ -13,12 +13,14 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.5.1",
-	"appid": "wx65e1adae1b33651b",
+	"appid": "wxc53d5fe072620d64",
 	"projectname": "new-pay-mini-program",
 	"debugOptions": {
 		"hidedInDevtools": []
 	},
 	"isGameTourist": false,
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
