@@ -153,13 +153,55 @@
       <view class="modal-title">子女数量</view>
       <view class="modal-content">
         <view class="modal-input">
-          <view class="modal-input">
+          
             <input placeholder-class="input-holder" type="number" maxlength="10" bindinput="childrenNumberChange" class="input" placeholder="请输入子女数量"></input>
-          </view>
+          
         </view>
       </view>
       <view class="modal-footer">
         <view class="btn-confirm" bindtap="childrenEducationConfirm">确定</view>
+      </view>
+    </view>
+
+    <view class="modal-dialog" wx:if="{{medicalModal}}">
+      <view class="modal-title">医疗费用</view>
+      <view class="modal-content">
+        <view class="modal-input">
+          
+            <input placeholder-class="input-holder" type="number" maxlength="10" bindinput="medicalChange" class="input" placeholder="请输入每月医疗费用"></input>
+          
+        </view>
+      </view>
+      <view class="modal-footer">
+        <view class="btn-confirm" bindtap="medicalConfirm">确定</view>
+      </view>
+    </view>
+
+    <view class="modal-dialog" wx:if="{{selfEducationModal}}">
+      <view class="modal-title">继续教育</view>
+      <view class="modal-content">
+        <view class="modal-input">
+          
+            <input placeholder-class="input-holder" type="number" maxlength="10" bindinput="selfEducationChange" class="input" placeholder="请输入每月教育费用"></input>
+          
+        </view>
+      </view>
+      <view class="modal-footer">
+        <view class="btn-confirm" bindtap="selfEducationConfirm">确定</view>
+      </view>
+    </view>
+
+    <view class="modal-dialog" wx:if="{{oldModal}}">
+      <view class="modal-title">赡养老人</view>
+      <view class="modal-content">
+        <view class="modal-input">
+          
+            <input placeholder-class="input-holder" type="number" maxlength="10" bindinput="oldChange" class="input" placeholder="请输入老人数量"></input>
+          
+        </view>
+      </view>
+      <view class="modal-footer">
+        <view class="btn-confirm" bindtap="oldConfirm">确定</view>
       </view>
     </view>
 

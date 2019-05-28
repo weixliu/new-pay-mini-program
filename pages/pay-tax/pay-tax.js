@@ -91,6 +91,19 @@ Page({
       houseRentModal: false
     })
   },
+  houseRentClick: function (event) {
+    let selected = this.data.houseRentSelected
+    if (selected) {
+      this.setData({
+        houseRentSelected: !selected
+      })
+    } else {
+      this.setData({
+        houseRentSelected: !selected,
+        houseRentModal: true
+      })
+    }
+  },
   childrenNumberChange: function(event) {
     if (event.detail.value.length < 1) {
       this.setData({
@@ -107,19 +120,6 @@ Page({
       childrenEducationModal: false
     })
   },
-  houseRentClick: function(event) {
-    let selected = this.data.houseRentSelected
-    if (selected) {
-      this.setData({
-        houseRentSelected: !selected
-      })
-    } else {
-      this.setData({
-        houseRentSelected: !selected,
-        houseRentModal: true
-      })
-    }
-  },
   childrenEducationClick: function(event) {
     let selected = this.data.childrenEducationSelected
     if (selected) {
@@ -132,6 +132,22 @@ Page({
         childrenEducationModal: true
       })
     }
+  },
+  medicalChange: function (event) {
+    if (event.detail.value.length < 1) {
+      this.setData({
+        medicalDeduction: 0
+      })
+    } else {
+      this.setData({
+        medicalDeduction: Number(event.detail.value)
+      })
+    }
+  },
+  medicalConfirm: function (event) {
+    this.setData({
+      medicalModal: false
+    })
   },
   medicalClick: function(event) {
     let selected = this.data.medicalSelected
@@ -146,6 +162,22 @@ Page({
       })
     }
   },
+  selfEducationChange: function(event){
+    if (event.detail.value.length < 1) {
+      this.setData({
+        selfEducationDeduction: 0
+      })
+    } else {
+      this.setData({
+       selfEducationDeduction: Number(event.detail.value)
+      })
+    }
+  },
+  selfEducationConfirm: function (event) {
+    this.setData({
+      selfEducationModal: false
+    })
+  },
   selfEducationClick: function(event) {
     let selected = this.data.selfEducationSelected
     if (selected) {
@@ -158,6 +190,22 @@ Page({
         selfEducationModal: true
       })
     }
+  },
+  oldChange: function (event) {
+    if (event.detail.value.length < 1) {
+      this.setData({
+        oldDeduction: 0
+      })
+    } else {
+      this.setData({
+        oldDeduction: Number(event.detail.value) * 2000
+      })
+    }
+  },
+  oldConfirm: function (event) {
+    this.setData({
+      oldModal: false
+    })
   },
   oldClick: function(event) {
     let selected = this.data.oldSelected
