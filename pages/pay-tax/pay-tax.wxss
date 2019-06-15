@@ -120,3 +120,8 @@ input {
   align-items: center;
   font-size: 14px;
 }
+
+.confirm{
+  background-color: rgb(63, 218, 63);
+  color: rgb(255, 255, 255);
+}
