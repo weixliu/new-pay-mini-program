@@ -20,12 +20,12 @@ Page({
     medicalSelected: false,
     selfEducationSelected: false,
     oldSelected: false,
-    houseLoadDeduction: 1000,
-    houseRentDeduction: 1500,
-    childrenEducationDeduction: 1000,
+    houseLoadDeduction: 0,
+    houseRentDeduction: 0,
+    childrenEducationDeduction: 0,
     medicalDeduction: 0,
-    selfEducationDeduction: 300,
-    oldDeduction: 2000,
+    selfEducationDeduction: 0,
+    oldDeduction: 0,
 
     houseRentModal: false,
     childrenEducationModal: false,
@@ -37,13 +37,13 @@ Page({
         idx: 0,
         name: '省会、直辖市、计划单列市',
         checked: false,
-        value: 1500
+        value: 1200
       },
       {
         idx: 1,
         name: '人口规模大于100万',
         checked: false,
-        value: 1100
+        value: 1000
       },
       {
         idx: 2,
@@ -52,26 +52,78 @@ Page({
         value: 800
       },
     ],
-
+    selfEducationRadios: [{
+      idx: 0,
+      name: '学历继续教育',
+      checked: false,
+      value: 400
+    },
+    {
+      idx: 1,
+      name: '技能人员、专业技术人员职业资格继续教育',
+      checked: false,
+      value: 300
+    }
+    ],
     //output
     monthlyPays: []
   },
 
   calculatePay: function() {
-
+    let beforeMonthlyPay = this.data.beforeMonthlyPay
+    let houseFund = this.data.houseFundNumber * this.data.houseFundProportion
+    let insurance = this.data.pensionProportion * this.data.unemployedProportion * this.data.medicalProportion
+    let specialDeduction = this.data.houseLoadDeduction + this.data.houseLoadDeduction + this.data.childrenEducationDeduction + this.data.medicalDeduction + this.data.selfEducationDeduction + this.data.oldDeduction
+    let deductionRate = [0,0.03,0.1,0.2,0.25,0.3,0.35,0.45]
+    let quickDeduction = [0,2520,16920,31920,52920,85920,181920]
+    let monthlyPays = []
+    for (let i = 1; i <= 12; i++) {
+      let monthlyPay = {}
+      monthlyPay['month'] = i + '月'
+      monthlyPay['beforePay'] = beforeMonthlyPay
+      monthlyPay['fund'] = houseFund + insurance
+      let deduction = monthlyPay['beforePay'] * i - 5000 * i - monthlyPay['fund'] * i - specialDeduction*i
+      if(deduction <= 0){
+        monthlyPay['tax'] = 0.0
+      } else if (deduction<36000){
+        monthlyPay['tax'] = deduction * 0.03
+      } else if (deduction<144000){
+        monthlyPay['tax'] = deduction * 0.1 - 2520
+      } else if (deduction < 300000) {
+        monthlyPay['tax'] = deduction * 0.2 - 16920
+      } else if (deduction < 420000) {
+        monthlyPay['tax'] = deduction * 0.25 - 31920
+      } else if (deduction < 660000) {
+        monthlyPay['tax'] = deduction * 0.3 - 52920
+      } else if (deduction < 960000) {
+        monthlyPay['tax'] = deduction * 0.35 - 85920
+      } else {
+        monthlyPay['tax'] = deduction * 0.4 - 181920
+      } 
+      monthlyPay['afterPay'] = monthlyPay['beforePay'] - monthlyPay['fund'] - monthlyPay['tax']
+      monthlyPays.push(monthlyPay)
+    }
+    this.setData({
+      monthlyPays: monthlyPays
+    })
   },
 
   preventTouchMove: function() {},
 
   houseLoadClick: function(event) {
     let selected = this.data.houseLoadSelected
+    let houseLoadDeduction = this.data.houseLoadDeduction
     if (selected) {
       this.setData({
-        houseLoadSelected: !selected
+        houseLoadSelected: !selected,
+        houseLoadDeduction: 0
       })
     } else {
       this.setData({
-        houseLoadSelected: !selected
+        houseLoadSelected: !selected,
+        houseRentSelected: false,
+        houseRentDeduction: 0,
+        houseLoadDeduction: 1000
       })
     }
   },
@@ -95,11 +147,14 @@ Page({
     let selected = this.data.houseRentSelected
     if (selected) {
       this.setData({
-        houseRentSelected: !selected
+        houseRentSelected: !selected,
+        houseRentDeduction: 0
       })
     } else {
       this.setData({
         houseRentSelected: !selected,
+        houseLoadSelected:false,
+        houseLoadDeduction: 0,
         houseRentModal: true
       })
     }
@@ -124,7 +179,8 @@ Page({
     let selected = this.data.childrenEducationSelected
     if (selected) {
       this.setData({
-        childrenEducationSelected: !selected
+        childrenEducationSelected: !selected,
+        childrenEducationDeduction:0
       })
     } else {
       this.setData({
@@ -138,22 +194,32 @@ Page({
       this.setData({
         medicalDeduction: 0
       })
-    } else {
+    } else{
       this.setData({
         medicalDeduction: Number(event.detail.value)
       })
     }
   },
   medicalConfirm: function (event) {
-    this.setData({
+    if (this.data.medicalDeduction > 5000) {
+      wx.showToast({
+        title: '每个月标准限额不得超过5000元',
+        icon: 'none',
+        duration: 2000//持续的时间
+      })
+    }else{
+      this.setData({
       medicalModal: false
     })
+    }
   },
   medicalClick: function(event) {
+    
     let selected = this.data.medicalSelected
     if (selected) {
       this.setData({
-        medicalSelected: !selected
+        medicalSelected: !selected,
+        medicalDeduction:0
       })
     } else {
       this.setData({
@@ -163,15 +229,15 @@ Page({
     }
   },
   selfEducationChange: function(event){
-    if (event.detail.value.length < 1) {
-      this.setData({
-        selfEducationDeduction: 0
-      })
-    } else {
-      this.setData({
-       selfEducationDeduction: Number(event.detail.value)
-      })
+    let idx = event.detail.value;
+    let selfEducationRadios = this.data.selfEducationRadios
+    for (let i = 0; i <selfEducationRadios.length; i++) {
+      selfEducationRadios[i].checked = (i == idx)
     }
+    this.setData({
+      selfEducationRadios: selfEducationRadios,
+      selfEducationDeduction: selfEducationRadios[idx].value,
+    })
   },
   selfEducationConfirm: function (event) {
     this.setData({
@@ -182,7 +248,8 @@ Page({
     let selected = this.data.selfEducationSelected
     if (selected) {
       this.setData({
-        selfEducationSelected: !selected
+        selfEducationSelected: !selected,
+        selfEducationDeduction: 0
       })
     } else {
       this.setData({
@@ -198,7 +265,7 @@ Page({
       })
     } else {
       this.setData({
-        oldDeduction: Number(event.detail.value) * 2000
+       oldDeduction: 2000/(Number(event.detail.value))
       })
     }
   },
@@ -211,7 +278,8 @@ Page({
     let selected = this.data.oldSelected
     if (selected) {
       this.setData({
-        oldSelected: !selected
+        oldSelected: !selected,
+        oldDeduction: 0
       })
     } else {
       this.setData({
