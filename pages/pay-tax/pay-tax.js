@@ -20,7 +20,7 @@ Page({
     medicalSelected: false,
     selfEducationSelected: false,
     oldSelected: false,
-    houseLoadDeduction: 0,
+    houseLoadDeduction: 1000,
     houseRentDeduction: 0,
     childrenEducationDeduction: 0,
     medicalDeduction: 0,
@@ -37,13 +37,13 @@ Page({
         idx: 0,
         name: '省会、直辖市、计划单列市',
         checked: false,
-        value: 1200
+        value: 1500
       },
       {
         idx: 1,
         name: '人口规模大于100万',
         checked: false,
-        value: 1000
+        value: 1100
       },
       {
         idx: 2,
@@ -116,7 +116,7 @@ Page({
     if (selected) {
       this.setData({
         houseLoadSelected: !selected,
-        houseLoadDeduction: 0
+        houseLoadDeduction: 1000
       })
     } else {
       this.setData({
@@ -318,7 +318,6 @@ Page({
         beforeMonthlyPay: Number(event.detail.value)
       })
     }
-    console.log(this.data.beforeMonthlyPay)
   },
   //公积金
   inputHouseFundNumber: function(event) {

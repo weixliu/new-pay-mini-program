@@ -1,0 +1,79 @@
+<!--pages/bonus/bonus.wxml-->
+<view>
+  <!-- 税前年终奖收入 -->
+  <view class="weui-cell weui-cell_input">
+    <view class="weui-cell__hd">
+      <view class="weui-label">年终奖（元）</view>
+    </view>
+    <view class="weui-cell__bd">
+      <input class="weui-input" type="digit" placeholder="请输入税前年终奖" bindinput="inputBonus" />
+    </view>
+  </view>
+  <!-- 综合年度所得，新税法非优惠版 -->
+  <!-- 
+  <view class="weui-cell weui-cell_input">
+    <view class="weui-cell__hd">
+      <view class="weui-label">年度综合（元）</view>
+    </view>
+    <view class="weui-cell__bd">
+      <input class="weui-input" type="digit" placeholder="请输入本年综合所得" bindinput="inputPay" />
+    </view>
+  </view>
+  -->
+  <!-- 确定 -->
+  <view>
+    <button class="confirm" bindtap='calculate'>确定</button>
+  </view>
+
+  <!-- 计算结果 -->
+  <view>
+    <view class="weui-cells__title">计算结果</view>
+    <view class="weui-cells weui-cells_after-title addBorder">
+      <view class="weui-flex">
+        <view class="weui-flex__item resultTitle">新税法优惠版（至2021年12月31日）年终奖金额</view>
+      </view>
+      <view class="weui-flex" wx:if="{{calculated}}">
+        <view class="weui-flex__item resultTitle">计算方法：{{taxBeforeBonus}} - ({{taxBeforeBonus}} * {{taxRate}}% - {{quickDeduction}}) = </view>
+      </view>
+      <view class="weui-flex">
+        <view class="weui-flex__item resultBonus">{{taxAfterBonus}}</view>
+      </view>
+      <!--
+      <view class="weui-flex">
+        <view class="weui-flex__item resultTitle">新税法非优惠版年终奖金额</view>
+      </view>
+      <view class="weui-flex">
+        <view class="weui-flex__item resultBonus">0</view>
+      </view>
+      -->
+    </view>
+  </view>
+
+  <!-- 新税法税率表 -->
+  <view class="weui-cells__title">新税法税率表（月）</view>
+  <view class="weui-grids weui-cells_after-title">
+    <view class="table">
+      <view class="tr bg-w">
+        <view class="th">税率</view>
+        <view class="th">全月应纳税所得额</view>
+        <view class="th ">速算扣除数</view>
+      </view>
+      <block wx:for="{{taxLadders}}" wx:for-index="idx" wx:for-item="taxLadder">
+        <view class="tr bg-g" wx:if="{{taxLadderHighLightIdx>=0&&idx==taxLadderHighLightIdx}}">
+          <view class="td">{{taxLadder.taxRate}}%</view>
+          <view class="td" wx:if="{{idx==0}}">不超过{{taxLadder.maxTax}}</view>
+          <view class="td" wx:elif="{{idx==taxLadders.length-1}}">超过{{taxLadder.minTax}}</view>
+          <view class="td" wx:else>{{taxLadder.minTax}}-{{taxLadder.maxTax}}</view>
+          <view class="td">{{taxLadder.quickDeduction}}</view>
+        </view>
+        <view class="tr" wx:else>
+          <view class="td">{{taxLadder.taxRate}}%</view>
+          <view class="td" wx:if="{{idx==0}}">不超过{{taxLadder.maxTax}}</view>
+          <view class="td" wx:elif="{{idx==taxLadders.length-1}}">超过{{taxLadder.minTax}}</view>
+          <view class="td" wx:else>{{taxLadder.minTax}}-{{taxLadder.maxTax}}</view>
+          <view class="td">{{taxLadder.quickDeduction}}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

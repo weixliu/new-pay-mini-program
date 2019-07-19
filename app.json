@@ -1,14 +1,28 @@
 {
   "pages": [
     "pages/pay-tax/pay-tax",
-    "pages/index/index",
-    "pages/logs/logs"
+    "pages/bonus/bonus"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#4F7FFE",
+    "position": "top",
+    "list": [
+      {
+        "pagePath": "pages/pay-tax/pay-tax",
+        "text": "月工资"
+      },
+      {
+        "pagePath": "pages/bonus/bonus",
+        "text": "年终奖"
+      }
+    ]
   },
   "sitemapLocation": "sitemap.json"
 }
